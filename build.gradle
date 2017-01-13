@@ -1,0 +1,51 @@
+
+
+plugins {
+    id "jaci.openrio.gradle.GradleRIO" version "2017.0.5"
+}
+
+
+apply plugin: "java"
+apply plugin: "eclipse"
+apply plugin: "idea"
+
+frc {
+    team = "1251"
+    robotClass = "org.usfirst.frc.team1251.Robot"
+
+    runArguments = "-XX:+AggressiveOpts"              // The command-line arguments to launch your jar with. By default, there are none. Not used if robotCommand set
+    useDebugCommand = false                           // Set to true if you want to use a remote debugger with your robot program. Not used if robotCommand is set.
+}
+
+wpi {
+    wpilibVersion = "+"                   // The WPILib version to use. For this version of GradleRIO, must be a 2017 version
+    ntcoreVersion = "+"                   // The NetworkTables Core version to use.
+    opencvVersion = "+"                   // The OpenCV version to use
+    cscoreVersion = "+"                   // The CSCore version to use
+
+    talonSrxVersion = "+"                 // The CTRE Toolsuite (Talon SRX) version to use.
+}
+
+dependencies {
+    compile wpilib()
+    compile talonSrx()
+
+    // Use these to link your own third-party device libraries (e.g. navX)
+    compile fileTree(dir: 'libs', include: '**/*.jar')
+    //native  fileTree(dir: 'libs', include: '**/*.so') errors out and idk why
+}
+
+
+def robotManifest = {
+  attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
+  attributes 'Robot-Class': frc.robotClass
+}
+
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest robotManifest
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.2.1'
+}
