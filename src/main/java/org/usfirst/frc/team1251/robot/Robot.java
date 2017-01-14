@@ -1,6 +1,12 @@
 package org.usfirst.frc.team1251.robot;
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Talon;
 
 /**
  * Created by Eric on 10/2/2016.
@@ -48,6 +54,8 @@ public class Robot extends IterativeRobot {
 
     //Static counter values
     private static final int CLAW_CALIBRATION_DISTANCE = 60;
+
+    //Defaults to false
     //Non-static counter values
     private boolean isCalibrated;
     private boolean clawLimit;
@@ -101,7 +109,7 @@ public class Robot extends IterativeRobot {
         clawBackLimit = new DigitalInput(CLAW_LIMIT_SWITCH);
         shooterLimit = new DigitalInput(SHOOTER_LIMIT_SWITCH);
         clawPosition = new Encoder(ENCODER_SOURCE_A, ENCODER_SOURCE_B);
-}
+    }
 
     @Override
     public void autonomousInit(){
@@ -135,8 +143,7 @@ public class Robot extends IterativeRobot {
              */
             if (driveController.getRawButton(LOGITECH_A_BUTTON)) {
                 //fill later
-            }
-            if (driveController.getRawButton(LOGITECH_B_BUTTON)) {
+            } else if (driveController.getRawButton(LOGITECH_B_BUTTON)) {
                 collector.set(-1.0);
             } else {
                 collector.set(0);

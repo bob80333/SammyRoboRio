@@ -10,7 +10,7 @@ apply plugin: "eclipse"
 apply plugin: "idea"
 
 frc {
-    team = "1251"
+    team = "1252"
     robotClass = "org.usfirst.frc.team1251.Robot"
 
     runArguments = "-XX:+AggressiveOpts"              // The command-line arguments to launch your jar with. By default, there are none. Not used if robotCommand set
