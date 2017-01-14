@@ -16,6 +16,7 @@ public class Robot extends IterativeRobot {
     public static final int PWM_PORT_2 = 2;
     public static final int PWM_PORT_3 = 3;
     public static final int PWM_PORT_4 = 4;
+    public static final int PWM_PORT_5 = 5;
 
     //Define PCM ports
     public static final int PCM_PORT_0 = 0;
@@ -36,10 +37,19 @@ public class Robot extends IterativeRobot {
     public static final int LOGITECH_Y_BUTTON = 4;
     public static final int LOGITECH_LEFT_TRIGGER = 7;
     public static final int LOGITECH_RIGHT_TRIGGER = 8;
+    public static final int LOGITECH_START_BUTTON = 10;
 
     //Define sensor inputs
     public static final int CLAW_LIMIT_SWITCH = 0;
     public static final int SHOOTER_LIMIT_SWITCH = 1;
+    public static final int ENCODER_SOURCE_A = 2;
+    public static final int ENCODER_SOURCE_B = 3;
+
+    //Static counter values
+    public static final int CLAW_CALIBRATION_DISTANCE = 60;
+    //Non-static counter values
+    public boolean isCalibrated = false;
+    public boolean clawLimit =false;
 
     //Define speed controllers
     private Talon leftTank1;
@@ -47,6 +57,7 @@ public class Robot extends IterativeRobot {
     private Talon rightTank1;
     private Talon rightTank2;
     private Talon collector;
+    private Talon clawPivot;
 
     //Define solenoids
     private DoubleSolenoid wings;
@@ -62,6 +73,7 @@ public class Robot extends IterativeRobot {
     //Define sensors
     private DigitalInput clawBackLimit;
     private DigitalInput shooterLimit;
+    private Encoder clawPosition;
 
     @Override
     public void robotInit(){
@@ -71,6 +83,7 @@ public class Robot extends IterativeRobot {
         rightTank1 = new Talon(PWM_PORT_2);
         rightTank2 = new Talon(PWM_PORT_3);
         collector = new Talon(PWM_PORT_4);
+        clawPivot = new Talon(PWM_PORT_5);
 
         //Declare drivetrain
         driveTrain = new RobotDrive(leftTank1, leftTank2, rightTank1, rightTank2);
@@ -86,6 +99,7 @@ public class Robot extends IterativeRobot {
         //Declare sensors
         clawBackLimit = new DigitalInput(CLAW_LIMIT_SWITCH);
         shooterLimit = new DigitalInput(SHOOTER_LIMIT_SWITCH);
+        clawPosition = new Encoder(ENCODER_SOURCE_A, ENCODER_SOURCE_B);
 }
 
     @Override
@@ -105,53 +119,84 @@ public class Robot extends IterativeRobot {
 
     @Override
     public void teleopPeriodic(){
+        if (isCalibrated) {
 
-        /*  -Drivetrain-
-                >Left stick: Moves left side of drivetrain forward and back
-                >Right stick: Moves right side of drivetrain forward and back
-         */
-        driveTrain.tankDrive(driveController.getRawAxis(LOGITECH_LEFT_JOYSTICK), driveController.getRawAxis(LOGITECH_RIGHT_JOYSTICK));
+            /*  -Drivetrain-
+                    >Left stick: Moves left side of drivetrain forward and back
+                    >Right stick: Moves right side of drivetrain forward and back
+             */
+            driveTrain.tankDrive(driveController.getRawAxis(LOGITECH_LEFT_JOYSTICK), driveController.getRawAxis(LOGITECH_RIGHT_JOYSTICK));
 
 
-        /*  -Collector-
-                >A button: Move claw down and intake
-                >B button: Outake
-         */
-        if (driveController.getRawButton(LOGITECH_A_BUTTON)) {
-            //fill later
-        }
-        if (driveController.getRawButton(LOGITECH_B_BUTTON)) {
-            collector.set(-1.0);
+            /*  -Collector-
+                    >A button: Move claw down and intake
+                    >B button: Outtake
+             */
+            if (driveController.getRawButton(LOGITECH_A_BUTTON)) {
+                //fill later
+            }
+            if (driveController.getRawButton(LOGITECH_B_BUTTON)) {
+                collector.set(-1.0);
+            } else {
+                collector.set(0);
+            }
+
+
+            /*  -Wings-
+                    >Y button(hold): Opens wings and claw
+                    >Y button(release): Closes wings and claw
+             */
+            if (driveController.getRawButton(LOGITECH_Y_BUTTON)) {
+                wings.set(DoubleSolenoid.Value.kForward);
+                claw.set(DoubleSolenoid.Value.kForward);
+            } else {
+                wings.set(DoubleSolenoid.Value.kReverse);
+                claw.set(DoubleSolenoid.Value.kReverse);
+            }
+
+
+            /*  -gearShifter-
+                    >Left Trigger: Shifts drive gear to low
+                    >Right Trigger Shifts drive gear to high
+             */
+            if (driveController.getRawButton(LOGITECH_LEFT_TRIGGER)) {
+                gearShift.set(DoubleSolenoid.Value.kReverse);
+            }
+            if (driveController.getRawButton(LOGITECH_RIGHT_TRIGGER)) {
+                gearShift.set(DoubleSolenoid.Value.kForward);
+            }
+
+
+            //re-calibrate robot (only for testing)
+            if (driveController.getRawButton(LOGITECH_START_BUTTON)) {
+                isCalibrated = false;
+            }
+
         }
         else {
-            collector.set(0);
-        }
+            //Move claw back until sensor is pressed
+            if (!clawLimit) {
+                if (clawBackLimit.get()) {
+                    clawPivot.set(0);
+                    clawPosition.reset();
+                    clawLimit = true;
+                }
+                else {
+                    clawPivot.set(-0.3);
+                }
+            }
+            else {
+                //move claw a set distance and zero the encoder
+                if(CLAW_CALIBRATION_DISTANCE >= clawPosition.get()) {
+                    clawPivot.set(0.7);
+                }
+                else {
+                    clawPivot.set(0);
+                    clawPosition.reset();
+                    isCalibrated = true;
+                }
+            }
 
-
-        /*  -Wings-
-                >Y button(hold): Opens wings and claw
-                >Y button(release): Closes wings and claw
-         */
-        if (driveController.getRawButton(LOGITECH_Y_BUTTON)) {
-            wings.set(DoubleSolenoid.Value.kForward);
-            claw.set(DoubleSolenoid.Value.kForward);
         }
-        else {
-            wings.set(DoubleSolenoid.Value.kReverse);
-            claw.set(DoubleSolenoid.Value.kReverse);
-        }
-
-
-        /*  -gearShifter-
-                >Left Trigger: Shifts drive gear to low
-                >Right Trigger Shifts drive gear to high
-         */
-        if (driveController.getRawButton(LOGITECH_LEFT_TRIGGER)) {
-            gearShift.set(DoubleSolenoid.Value.kReverse);
-        }
-        if (driveController.getRawButton(LOGITECH_RIGHT_TRIGGER)) {
-            gearShift.set(DoubleSolenoid.Value.kForward);
-        }
-
     }
 }
