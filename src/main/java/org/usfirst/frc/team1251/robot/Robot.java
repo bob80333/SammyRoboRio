@@ -1,12 +1,6 @@
 package org.usfirst.frc.team1251.robot;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.*;
 
 /**
  * Created by Eric on 10/2/2016.
@@ -155,7 +149,7 @@ public class Robot extends IterativeRobot {
              */
             if (driveController.getRawButton(LOGITECH_Y_BUTTON)) {
                 wings.set(DoubleSolenoid.Value.kForward);
-                claw.set(DoubleSolenoid.Value.kForward);
+                claw.set(DoubleSolenoid.Value.kReverse);
             } else {
                 wings.set(DoubleSolenoid.Value.kReverse);
                 claw.set(DoubleSolenoid.Value.kReverse);
