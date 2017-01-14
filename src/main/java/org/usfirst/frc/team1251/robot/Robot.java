@@ -4,52 +4,53 @@ import edu.wpi.first.wpilibj.*;
 
 /**
  * Created by Eric on 10/2/2016.
- * Edit by Jared on 1/13/2017.
+ *
+ * Edit by Jared on 1/14/2017.
  *
  * Version: 1.0
  */
 public class Robot extends IterativeRobot {
 
     //Define PWM ports
-    public static final int PWM_PORT_0 = 0;
-    public static final int PWM_PORT_1 = 1;
-    public static final int PWM_PORT_2 = 2;
-    public static final int PWM_PORT_3 = 3;
-    public static final int PWM_PORT_4 = 4;
-    public static final int PWM_PORT_5 = 5;
+    private static final int PWM_PORT_0 = 0;
+    private static final int PWM_PORT_1 = 1;
+    private static final int PWM_PORT_2 = 2;
+    private static final int PWM_PORT_3 = 3;
+    private static final int PWM_PORT_4 = 4;
+    private static final int PWM_PORT_5 = 5;
 
     //Define PCM ports
-    public static final int PCM_PORT_0 = 0;
-    public static final int PCM_PORT_1 = 1;
-    public static final int PCM_PORT_2 = 2;
-    public static final int PCM_PORT_3 = 3;
-    public static final int PCM_PORT_4 = 4;
-    public static final int PCM_PORT_5 = 5;
+    private static final int PCM_PORT_0 = 0;
+    private static final int PCM_PORT_1 = 1;
+    private static final int PCM_PORT_2 = 2;
+    private static final int PCM_PORT_3 = 3;
+    private static final int PCM_PORT_4 = 4;
+    private static final int PCM_PORT_5 = 5;
 
     //Define joystick port
-    public static final int LOGITECH_PORT = 0;
+    private static final int LOGITECH_PORT = 0;
 
     //Define joystick inputs
-    public static final int LOGITECH_LEFT_JOYSTICK = 0;
-    public static final int LOGITECH_RIGHT_JOYSTICK = 1;
-    public static final int LOGITECH_A_BUTTON = 2;
-    public static final int LOGITECH_B_BUTTON = 3;
-    public static final int LOGITECH_Y_BUTTON = 4;
-    public static final int LOGITECH_LEFT_TRIGGER = 7;
-    public static final int LOGITECH_RIGHT_TRIGGER = 8;
-    public static final int LOGITECH_START_BUTTON = 10;
+    private static final int LOGITECH_LEFT_JOYSTICK = 0;
+    private static final int LOGITECH_RIGHT_JOYSTICK = 1;
+    private static final int LOGITECH_A_BUTTON = 2;
+    private static final int LOGITECH_B_BUTTON = 3;
+    private static final int LOGITECH_Y_BUTTON = 4;
+    private static final int LOGITECH_LEFT_TRIGGER = 7;
+    private static final int LOGITECH_RIGHT_TRIGGER = 8;
+    private static final int LOGITECH_START_BUTTON = 10;
 
     //Define sensor inputs
-    public static final int CLAW_LIMIT_SWITCH = 0;
-    public static final int SHOOTER_LIMIT_SWITCH = 1;
-    public static final int ENCODER_SOURCE_A = 2;
-    public static final int ENCODER_SOURCE_B = 3;
+    private static final int CLAW_LIMIT_SWITCH = 0;
+    private static final int SHOOTER_LIMIT_SWITCH = 1;
+    private static final int ENCODER_SOURCE_A = 2;
+    private static final int ENCODER_SOURCE_B = 3;
 
     //Static counter values
-    public static final int CLAW_CALIBRATION_DISTANCE = 60;
+    private static final int CLAW_CALIBRATION_DISTANCE = 60;
     //Non-static counter values
-    public boolean isCalibrated = false;
-    public boolean clawLimit =false;
+    private boolean isCalibrated = false;
+    private boolean clawLimit =false;
 
     //Define speed controllers
     private Talon leftTank1;
@@ -68,7 +69,7 @@ public class Robot extends IterativeRobot {
     private Joystick driveController;
 
     //Define drivetrain
-    public RobotDrive driveTrain;
+    private RobotDrive driveTrain;
 
     //Define sensors
     private DigitalInput clawBackLimit;
