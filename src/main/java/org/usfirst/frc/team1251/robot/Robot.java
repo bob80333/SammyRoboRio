@@ -15,6 +15,7 @@ public class Robot extends IterativeRobot {
     public static final int PWM_PORT_1 = 1;
     public static final int PWM_PORT_2 = 2;
     public static final int PWM_PORT_3 = 3;
+    public static final int PWM_PORT_4 = 4;
 
     //Define PCM ports
     public static final int PCM_PORT_0 = 0;
@@ -30,18 +31,22 @@ public class Robot extends IterativeRobot {
     //Define joystick inputs
     public static final int LOGITECH_LEFT_JOYSTICK = 0;
     public static final int LOGITECH_RIGHT_JOYSTICK = 1;
+    public static final int LOGITECH_A_BUTTON = 2;
+    public static final int LOGITECH_B_BUTTON = 3;
     public static final int LOGITECH_Y_BUTTON = 4;
     public static final int LOGITECH_LEFT_TRIGGER = 7;
     public static final int LOGITECH_RIGHT_TRIGGER = 8;
 
     //Define sensor inputs
     public static final int CLAW_LIMIT_SWITCH = 0;
+    public static final int SHOOTER_LIMIT_SWITCH = 1;
 
     //Define speed controllers
     private Talon leftTank1;
     private Talon leftTank2;
     private Talon rightTank1;
     private Talon rightTank2;
+    private Talon collector;
 
     //Define solenoids
     private DoubleSolenoid wings;
@@ -56,6 +61,7 @@ public class Robot extends IterativeRobot {
 
     //Define sensors
     private DigitalInput clawBackLimit;
+    private DigitalInput shooterLimit;
 
     @Override
     public void robotInit(){
@@ -64,6 +70,7 @@ public class Robot extends IterativeRobot {
         leftTank2 = new Talon(PWM_PORT_1);
         rightTank1 = new Talon(PWM_PORT_2);
         rightTank2 = new Talon(PWM_PORT_3);
+        collector = new Talon(PWM_PORT_4);
 
         //Declare drivetrain
         driveTrain = new RobotDrive(leftTank1, leftTank2, rightTank1, rightTank2);
@@ -78,6 +85,7 @@ public class Robot extends IterativeRobot {
 
         //Declare sensors
         clawBackLimit = new DigitalInput(CLAW_LIMIT_SWITCH);
+        shooterLimit = new DigitalInput(SHOOTER_LIMIT_SWITCH);
 }
 
     @Override
@@ -103,6 +111,21 @@ public class Robot extends IterativeRobot {
                 >Right stick: Moves right side of drivetrain forward and back
          */
         driveTrain.tankDrive(driveController.getRawAxis(LOGITECH_LEFT_JOYSTICK), driveController.getRawAxis(LOGITECH_RIGHT_JOYSTICK));
+
+
+        /*  -Collector-
+                >A button: Move claw down and intake
+                >B button: Outake
+         */
+        if (driveController.getRawButton(LOGITECH_A_BUTTON)) {
+            //fill later
+        }
+        if (driveController.getRawButton(LOGITECH_B_BUTTON)) {
+            collector.set(-1.0);
+        }
+        else {
+            collector.set(0);
+        }
 
 
         /*  -Wings-
