@@ -63,6 +63,13 @@
     <option name="LOCALE" />
     <option name="OPEN_IN_BROWSER" value="true" />
   </component>
+  <component name="ProjectDictionaryState">
+    <dictionary name="Jared">
+      <words>
+        <w>logitech</w>
+      </words>
+    </dictionary>
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SammyRoboRio.iml" filepath="$PROJECT_DIR$/.idea/modules/SammyRoboRio.iml" />
