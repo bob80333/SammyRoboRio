@@ -1,6 +1,12 @@
 package org.usfirst.frc.team1251.robot;
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Talon;
 
 /**
  * Created by Eric on 10/2/2016.
@@ -49,8 +55,8 @@ public class Robot extends IterativeRobot {
     //Static counter values
     private static final int CLAW_CALIBRATION_DISTANCE = 60;
     //Non-static counter values
-    private boolean isCalibrated = false;
-    private boolean clawLimit =false;
+    private boolean isCalibrated;
+    private boolean clawLimit;
 
     //Define speed controllers
     private Talon leftTank1;
@@ -188,7 +194,7 @@ public class Robot extends IterativeRobot {
             }
             else {
                 //move claw a set distance and zero the encoder
-                if(CLAW_CALIBRATION_DISTANCE >= clawPosition.get()) {
+                if(clawPosition.get() <= CLAW_CALIBRATION_DISTANCE) {
                     clawPivot.set(0.7);
                 }
                 else {
