@@ -34,7 +34,8 @@ public class Robot extends IterativeRobot {
     public static final int LOGITECH_LEFT_TRIGGER = 7;
     public static final int LOGITECH_RIGHT_TRIGGER = 8;
 
-    public static final int CLAW_LIMIT_SWITCH = 1;
+    //Define sensor inputs
+    public static final int CLAW_LIMIT_SWITCH = 0;
 
     //Define speed controllers
     private Talon leftTank1;
