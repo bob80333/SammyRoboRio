@@ -84,7 +84,7 @@ public class Robot extends IterativeRobot {
     private Encoder clawPosition;
 
     @Override
-    public void robotInit(){
+    public void robotInit() {
         //Declare speed controllers
         leftTank1 = new Talon(PWM_PORT_0);
         leftTank2 = new Talon(PWM_PORT_1);
@@ -97,7 +97,7 @@ public class Robot extends IterativeRobot {
         driveTrain = new RobotDrive(leftTank1, leftTank2, rightTank1, rightTank2);
 
         //Declare solenoids
-        wings = new DoubleSolenoid(PCM_PORT_0,PCM_PORT_1);
+        wings = new DoubleSolenoid(PCM_PORT_0, PCM_PORT_1);
         claw = new DoubleSolenoid(PCM_PORT_2, PCM_PORT_3);
         gearShift = new DoubleSolenoid(PCM_PORT_4, PCM_PORT_5);
 
@@ -111,29 +111,29 @@ public class Robot extends IterativeRobot {
     }
 
     @Override
-    public void autonomousInit(){
+    public void autonomousInit() {
 
     }
 
     @Override
-    public void autonomousPeriodic(){
+    public void autonomousPeriodic() {
 
     }
 
     @Override
-    public void teleopInit(){
+    public void teleopInit() {
 
     }
 
     @Override
-    public void teleopPeriodic(){
+    public void teleopPeriodic() {
         if (isCalibrated) {
 
             /*  -Drivetrain-
                     >Left stick: Moves left side of drivetrain forward and back
                     >Right stick: Moves right side of drivetrain forward and back
              */
-            driveTrain.tankDrive(driveController.getRawAxis(LOGITECH_LEFT_JOYSTICK), driveController.getRawAxis(LOGITECH_RIGHT_JOYSTICK));
+            driveTrain.tankDrive(getLeftJoystick(), getRightJoystick());
 
 
             /*  -Collector-
@@ -179,31 +179,39 @@ public class Robot extends IterativeRobot {
                 isCalibrated = false;
             }
 
+        } else {
+            isCalibrated = calibrateClaw();
         }
-        else {
-            //Move claw back until sensor is pressed
-            if (!clawLimit) {
-                if (clawBackLimit.get()) {
-                    clawPivot.set(0);
-                    clawPosition.reset();
-                    clawLimit = true;
-                }
-                else {
-                    clawPivot.set(-0.3);
-                }
-            }
-            else {
-                //move claw a set distance and zero the encoder
-                if(clawPosition.get() <= CLAW_CALIBRATION_DISTANCE) {
-                    clawPivot.set(0.7);
-                }
-                else {
-                    clawPivot.set(0);
-                    clawPosition.reset();
-                    isCalibrated = true;
-                }
-            }
+    }
 
+    private boolean calibrateClaw() {
+        //Move claw back until sensor is pressed
+        if (!clawLimit) {
+            if (clawBackLimit.get()) {
+                clawPivot.set(0);
+                clawPosition.reset();
+                clawLimit = true;
+            } else {
+                clawPivot.set(-0.3);
+            }
+        } else {
+            //move claw a set distance and zero the encoder
+            if (clawPosition.get() <= CLAW_CALIBRATION_DISTANCE) {
+                clawPivot.set(0.7);
+            } else {
+                clawPivot.set(0);
+                clawPosition.reset();
+                return true;
+            }
         }
+        return false;
+    }
+
+    private double getLeftJoystick(){
+        return driveController.getRawAxis(LOGITECH_LEFT_JOYSTICK);
+    }
+
+    private double getRightJoystick(){
+        return driveController.getRawAxis(LOGITECH_RIGHT_JOYSTICK);
     }
 }
