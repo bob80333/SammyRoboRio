@@ -1,7 +1,7 @@
 
 
 plugins {
-    id "jaci.openrio.gradle.GradleRIO" version "2017.0.5"
+    id "jaci.openrio.gradle.GradleRIO" version "2017.0.7"
 }
 
 
@@ -13,7 +13,7 @@ frc {
     team = "1252"
     robotClass = "org.usfirst.frc.team1251.Robot"
 
-    runArguments = "-XX:+AggressiveOpts"              // The command-line arguments to launch your jar with. By default, there are none. Not used if robotCommand set
+    //runArguments = "-XX:+AggressiveOpts"              // The command-line arguments to launch your jar with. By default, there are none. Not used if robotCommand set
     useDebugCommand = false                           // Set to true if you want to use a remote debugger with your robot program. Not used if robotCommand is set.
 }
 
