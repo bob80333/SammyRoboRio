@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1251.robot;
+package org.usfirst.frc.team1251;
 
 import edu.wpi.first.wpilibj.*;
 
