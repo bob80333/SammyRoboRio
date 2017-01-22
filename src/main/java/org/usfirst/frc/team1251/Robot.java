@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1251.robot;
+package org.usfirst.frc.team1251;
 
 import edu.wpi.first.wpilibj.*;
 
@@ -52,6 +52,7 @@ public class Robot extends IterativeRobot {
     //Define variables
     private boolean shooterReady = false;
     private int pauseCounter = 30;
+    private int openCounter = 50;
 
     //Define speed controllers
     private Talon collector;
@@ -141,10 +142,10 @@ public class Robot extends IterativeRobot {
         		>A button: intake
         		>Y button: Outtake
          */
-        if (shootController.getRawButton(LOGITECH_A_BUTTON)) {
+        if (driveController.getRawButton(LOGITECH_A_BUTTON)) {
             collector.set(-1.0);
         }
-        else if (shootController.getRawButton(LOGITECH_Y_BUTTON)) {
+        else if (driveController.getRawButton(LOGITECH_Y_BUTTON)) {
             collector.set(1.0);
         }
         else {
@@ -153,10 +154,17 @@ public class Robot extends IterativeRobot {
 
 
         /*	-clawPivot-
-          		>Left stick: moves claw up and down (can't pass limit switch)
+          		>dpad up and dpad down
          */
         if (!clawBackLimit.get()) {
-            clawPivot.set(-shootController.getRawAxis(LOGITECH_LEFT_STICK)*0.3);
+            if (driveController.getPOV() == 180){
+                clawPivot.set(0.5);
+            }else if (driveController.getPOV() == 0){
+                clawPivot.set(-0.5);
+            }else{
+                clawPivot.set(0);
+            }
+
         }
         else {
             clawPivot.set(0.7);
@@ -165,16 +173,17 @@ public class Robot extends IterativeRobot {
 
         /*
             -Wings and Claw-
-        		>Right bumper(hold): Opens wings and claw
-        		>Right bumper(release): Closes wings and claw
+        		> B(hold): Opens wings and claw
+        		>B(release): Closes wings and claw
         */
-        if (shootController.getRawButton(LOGITECH_RIGHT_BUMPER)) {
+        if (driveController.getRawButton(LOGITECH_B_BUTTON)) {
+
             claw.set(DoubleSolenoid.Value.kReverse);
-            wings.set(DoubleSolenoid.Value.kForward);
-        }
-        else {
-            claw.set(DoubleSolenoid.Value.kForward);
             wings.set(DoubleSolenoid.Value.kReverse);
+        } else {
+            claw.set(DoubleSolenoid.Value.kForward);
+            wings.set(DoubleSolenoid.Value.kForward);
+
         }
 
 
@@ -182,8 +191,17 @@ public class Robot extends IterativeRobot {
          		>X button: shoots ball
          */
         if (shooterReady) {
-            if (shootController.getRawButton(LOGITECH_X_BUTTON)) {
+            if (driveController.getRawButton(LOGITECH_X_BUTTON)){
+                openCounter++;
+            }
+            if (openCounter < 30 && driveController.getRawButton(LOGITECH_X_BUTTON)){
+                claw.set(DoubleSolenoid.Value.kReverse);
+
+            }
+            if (driveController.getRawButton(LOGITECH_X_BUTTON) && openCounter > 30) {
                 shooter.set(DoubleSolenoid.Value.kForward);
+
+
             }
             if (!shooterLimit.get()){
                 pauseCounter = 0;
@@ -195,10 +213,12 @@ public class Robot extends IterativeRobot {
                 shooter.set(DoubleSolenoid.Value.kReverse);
                 if (!shooterLimit.get()) {
                     retractShooter.set(1.0);
+                    claw.set(DoubleSolenoid.Value.kForward);
                 }
                 else {
                     retractShooter.set(0);
                     shooterReady = true;
+                    openCounter = 0;
                 }
 
             }
