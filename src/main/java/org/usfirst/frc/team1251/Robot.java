@@ -17,8 +17,6 @@ public class Robot extends IterativeRobot {
     private static final int PWM_PORT_5 = 5;
     private static final int PWM_PORT_6 = 6;
 
-    private static final int PWM_PORT_6 = 6;
-
 
     //Define PCM ports
     private static final int PCM_PORT_0 = 0;
@@ -31,9 +29,6 @@ public class Robot extends IterativeRobot {
     private static final int PCM_PORT_7 = 7;
 
 
-    private static final int PCM_PORT_6 = 6;
-    private static final int PCM_PORT_7 = 7;
-
 
     //Define joystick port
     private static final int LOGITECH_DRIVER_PORT = 0;
@@ -52,33 +47,25 @@ public class Robot extends IterativeRobot {
 
 
     //Define joystick port
-    private static final int LOGITECH_DRIVER_PORT = 0;
-    private static final int LOGITECH_SHOOTER_PORT = 1;
 
-    //Define joystick inputs
-    private static final int LOGITECH_LEFT_STICK = 1;
-    private static final int LOGITECH_RIGHT_STICK = 3;
     private static final int LOGITECH_X_BUTTON = 1;
     private static final int LOGITECH_A_BUTTON = 2;
     private static final int LOGITECH_B_BUTTON = 3;
     private static final int LOGITECH_Y_BUTTON = 4;
     private static final int LOGITECH_LEFT_BUMPER = 5;
     private static final int LOGITECH_RIGHT_BUMPER = 6;
-    private static final int LOGITECH_LEFT_TRIGGER = 7;
-    private static final int LOGITECH_RIGHT_TRIGGER = 8;
+
 
     //Define sensor inputs
     private static final int CLAW_LIMIT_SWITCH = 1;
     private static final int SHOOTER_LIMIT_SWITCH = 0;
 
-    //Define variables
-    private boolean shooterReady = false;
-    private int pauseCounter = 30;
+
 
     //Define speed controllers
     private Talon collector;
     private Talon clawPivot;
-    private Talon retractShooter;
+
 
 
     //Define solenoids
@@ -149,7 +136,7 @@ public class Robot extends IterativeRobot {
          */
 
             driveTrain.tankDrive(-driveController.getRawAxis(LOGITECH_LEFT_STICK),
-                    -driveController.getRawAxis(LOGITECH_RIGHT_STICK));
+                    driveController.getRawAxis(LOGITECH_RIGHT_STICK));
 
         /*  -gearShifter-
                 >Left Bumper: Shifts drive gear to low
@@ -224,10 +211,10 @@ public class Robot extends IterativeRobot {
         */
             if (shootController.getRawButton(LOGITECH_RIGHT_BUMPER)) {
                 claw.set(DoubleSolenoid.Value.kReverse);
-                wings.set(DoubleSolenoid.Value.kForward);
+                wings.set(DoubleSolenoid.Value.kReverse);
             } else {
                 claw.set(DoubleSolenoid.Value.kForward);
-                wings.set(DoubleSolenoid.Value.kReverse);
+                wings.set(DoubleSolenoid.Value.kForward);
             }
 
         /*	-Shooter-
