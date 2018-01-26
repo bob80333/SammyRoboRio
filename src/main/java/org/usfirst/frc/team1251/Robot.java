@@ -157,9 +157,9 @@ public class Robot extends IterativeRobot {
           		>dpad up and dpad down
          */
         if (!clawBackLimit.get()) {
-            if (driveController.getRawButton(LOGITECH_RIGHT_BUMPER)){
+            if (driveController.getRawButton(LOGITECH_LEFT_BUMPER)){
                 clawPivot.set(0.5);
-            }else if (driveController.getRawButton(LOGITECH_LEFT_BUMPER)){
+            }else if (driveController.getRawButton(LOGITECH_RIGHT_BUMPER)){
                 clawPivot.set(-0.5);
             }else{
                 clawPivot.set(0);
@@ -192,11 +192,9 @@ public class Robot extends IterativeRobot {
          */
         if (shooterReady) {
             if (driveController.getRawButton(LOGITECH_X_BUTTON)){
-                openCounter++;
-            }
-            if (openCounter < 30 && driveController.getRawButton(LOGITECH_X_BUTTON)){
                 claw.set(DoubleSolenoid.Value.kReverse);
-
+                wings.set(DoubleSolenoid.Value.kReverse);
+                openCounter++;
             }
             if (driveController.getRawButton(LOGITECH_X_BUTTON) && openCounter > 30) {
                 shooter.set(DoubleSolenoid.Value.kForward);
@@ -214,6 +212,7 @@ public class Robot extends IterativeRobot {
                 if (!shooterLimit.get()) {
                     retractShooter.set(1.0);
                     claw.set(DoubleSolenoid.Value.kForward);
+                    wings.set(DoubleSolenoid.Value.kForward);
                 }
                 else {
                     retractShooter.set(0);
