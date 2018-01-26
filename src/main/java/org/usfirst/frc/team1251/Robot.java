@@ -123,17 +123,17 @@ public class Robot extends IterativeRobot {
                 >Right stick: Moves right side of drivetrain forward and back
          */
         driveTrain.tankDrive(-driveController.getRawAxis(LOGITECH_LEFT_STICK),
-                -driveController.getRawAxis(LOGITECH_RIGHT_STICK));
+                driveController.getRawAxis(LOGITECH_RIGHT_STICK));
 
 
         /*  -gearShifter-
                 >Left Bumper: Shifts drive gear to low
                 >Right Bumper Shifts drive gear to high
          */
-        if (driveController.getRawButton(LOGITECH_LEFT_BUMPER)) {
+        if (driveController.getRawButton(LOGITECH_B_BUTTON)) {
             gearShift.set(DoubleSolenoid.Value.kReverse);
         }
-        if (driveController.getRawButton(LOGITECH_RIGHT_BUMPER)) {
+        if (driveController.getRawButton(LOGITECH_Y_BUTTON)) {
             gearShift.set(DoubleSolenoid.Value.kForward);
         }
 
@@ -142,10 +142,10 @@ public class Robot extends IterativeRobot {
         		>A button: intake
         		>Y button: Outtake
          */
-        if (driveController.getRawButton(LOGITECH_A_BUTTON)) {
+        if (driveController.getRawButton(LOGITECH_LEFT_TRIGGER)) {
             collector.set(-1.0);
         }
-        else if (driveController.getRawButton(LOGITECH_Y_BUTTON)) {
+        else if (driveController.getRawButton(LOGITECH_RIGHT_TRIGGER)) {
             collector.set(1.0);
         }
         else {
@@ -157,9 +157,9 @@ public class Robot extends IterativeRobot {
           		>dpad up and dpad down
          */
         if (!clawBackLimit.get()) {
-            if (driveController.getPOV() == 180){
+            if (driveController.getRawButton(LOGITECH_RIGHT_BUMPER)){
                 clawPivot.set(0.5);
-            }else if (driveController.getPOV() == 0){
+            }else if (driveController.getRawButton(LOGITECH_LEFT_BUMPER)){
                 clawPivot.set(-0.5);
             }else{
                 clawPivot.set(0);
@@ -176,7 +176,7 @@ public class Robot extends IterativeRobot {
         		> B(hold): Opens wings and claw
         		>B(release): Closes wings and claw
         */
-        if (driveController.getRawButton(LOGITECH_B_BUTTON)) {
+        if (driveController.getRawButton(LOGITECH_A_BUTTON)) {
 
             claw.set(DoubleSolenoid.Value.kReverse);
             wings.set(DoubleSolenoid.Value.kReverse);
